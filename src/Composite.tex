@@ -1,0 +1,9 @@
+\subsubsection{Transparent vs.\ Safe Approach}
+\begin{sectionbox}[Problem]\nospacing
+  Being able to treat a heterogeneous collection of objects atomically (or transparently) requires that the "child management" interface be defined at the root of the Composite class hierarchy (the abstract Component class). However, this choice costs you safety, because clients may try to do meaningless things like add and remove objects from leaf objects. On the other hand, if you "design for safety", the child management interface is declared in the Composite class, and you lose transparency because leaves and Composites now have different interfaces.
+\end{sectionbox}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

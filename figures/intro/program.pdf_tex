@@ -1,0 +1,74 @@
+%% Creator: Inkscape inkscape 0.92.2, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'program.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{309.1836692bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.74024185)%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{program.pdf}}%
+    \put(0.08360463,0.61161375){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{file.java}}}%
+    \put(0.04796105,0.55814839){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{(source code)}}}%
+    \put(0.76677294,0.61161375){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{file.class}}}%
+    \put(0.75093137,0.55814839){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{(bytecode)}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{program.pdf}}%
+    \put(0.43168313,0.6154894){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{javac}}}%
+    \put(0.39009898,0.54024196){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{(compiler)}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{program.pdf}}%
+    \put(0.22178217,0.69667756){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Java Development Kit (JDK)}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{program.pdf}}%
+    \put(0.01627791,0.2413167){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Class loader}}}%
+    \put(0.70142643,0.21359398){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Interpreter}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{program.pdf}}%
+    \put(0.39405941,0.24519235){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Bytecode}}}%
+    \put(0.04356436,0.32242014){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Java Runtime Enviroment (JRE)}}}%
+    \put(0.39801977,0.1877667){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{verifyer}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{program.pdf}}%
+    \put(0.26732668,0.0075686){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Running application/applet}}}%
+    \put(0.01429769,0.19181176){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{(bytecode)}}}%
+    \put(0.69306924,0.32638043){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{java myfile}}}%
+  \end{picture}%
+\endgroup%

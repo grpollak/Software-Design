@@ -1,0 +1,64 @@
+\begin{sectionbox}\nospacing
+  In Java, every variable, constant, and function (\textit{including main}) must
+  be inside some class.\\
+  \rdb{A Java Program}: is a class which contains a main method:
+  \begin{mintlinebox}{java}
+		public static void main(String[] args) { |\ldots| }
+  \end{mintlinebox}
+  \begin{itemizenosep}
+      \item \javainline/pulic/: accessible from everywhere.
+      \item \javainline/static/: defined on the class level (not bound to instances).
+      \item \javainline/void/: does not return a result ($\Rightarrow$ procedure)
+      \item \javainline/args/: argument, array of command-line arguments
+  \end{itemizenosep}
+\end{sectionbox}
+\subsection{Packages}
+\begin{sectionbox}\nospacing
+  Programmers can define their own packages to bundle group of
+  classes/interfaces, etc.\\
+  Packages create a new namespace thus there won't be any name conflicts with
+  similar identifiers from other packages.
+\end{sectionbox}
+\begin{defnbox}\nospacing
+  \begin{defn}[Package Statement]
+    Identifies the package that a Java program belongs to.
+    The package statement should be the first line in the source file
+    (there can be only one package statement per source file).\\
+    \imp{Package Statement}:\hfil \javainline/package package-name;/
+  \end{defn}
+\end{defnbox}
+\begin{sectionbox}[Compiling source files with package statements]\nospacing
+  Using the \javainline/-d destination_fodler/ option will create a folder with
+  the given package name \textit{in the package statement} will be created in
+  the given destination folder (if not existing), and place the complied source file
+  into it.
+  \begin{mintlinebox}{java}
+		javac -d destination_folder file.java
+  \end{mintlinebox}
+\end{sectionbox}
+\begin{sectionbox}[Using Packages]\nospacing
+  \begin{itemizenosep}
+      \item \javainline/package_name.identifier/: use fully qualified names.
+    	\item \javainline/import package_name.*/: import the whole package.
+    	\item \javainline/import package_name.identifier/: import certain identifiers.
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{stylebox}[The default package]\nospacing
+  \begin{itemizenosep}
+    \item 
+  If a program does not include a package statement it belongs to the so called
+  \rd{default package}, which is basically an default, unnamed package.\\
+  When developing small or temporary applications e.g. for testing purposes, its
+  ok not to include a package statement.\\
+  \imp{But} in order to avoid name conflicts, all java source files belonging to
+  a program should contain a package statement.
+    \item \imp{Convention}: use your transposed internet domain name for
+  uniqueness, if you have one.
+    \item \imp{Lower Cases}: use lower case letters for packages in orde
+      to avoid any conflicts with the names of classes and interfaces.
+  \end{itemizenosep}
+\end{stylebox}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

@@ -1,0 +1,46 @@
+\begin{sectionbox}[\subsubsection*{If}]\nospacing
+  \begin{mintlinebox}{java}
+		if(expression)|\optlc| statement |\optrc\opta{else \opta{if(\ldots)} statement}|
+  \end{mintlinebox}
+\end{sectionbox}
+\begin{sectionbox}[\subsubsection*{for}]\nospacing
+  \begin{mintlinebox}{java}
+		for(ForControl)|\optlc| statement |\optrc|
+  \end{mintlinebox}
+\end{sectionbox}
+\begin{sectionbox}[\subsubsection*{while}]\nospacing
+  \begin{mintlinebox}{java}
+		while(expression)|\optlc| statement |\optrc|
+  \end{mintlinebox}
+\end{sectionbox}
+\begin{sectionbox}[\subsubsection*{do while}]\nospacing
+  \begin{mintlinebox}{java}
+		do|\optlc| statement |\optrc| while(expression);
+  \end{mintlinebox}
+\end{sectionbox}
+\begin{sectionbox}[\subsubsection*{switch}]\nospacing
+  \begin{mintlinebox}{java}
+switch(expression){
+  case val1: // if expression == val1
+    //statemets
+  break;
+  case val2: // if expression == val2
+    //statemets
+  break;
+    |\ldots|
+  default:
+    //statements
+}
+  \end{mintlinebox}
+\end{sectionbox}
+\begin{notebox}[Notes]\nospacing
+  \begin{itemizenosep}
+      \item \javainline/break;/: stops control statement at this point.
+      \item \javainline/continue;/: stops control statment at this round and
+    jumps to next round.
+  \end{itemizenosep}
+\end{notebox}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

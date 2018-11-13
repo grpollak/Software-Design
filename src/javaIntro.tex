@@ -1,0 +1,71 @@
+\section{Introduction}
+\begin{sectionbox}[\tc{optional}{Syntax}]\nospacing
+  \begin{itemizenosep}
+      \item \cppinline[bgcolor=mintinlinebox]/|$\alphac \optbar \betac$|/:\hfil
+    either $\alphac$ or $\betac$
+      \item \cppinline[bgcolor=mintinlinebox]/|$\optab{\alphac}$|/:\hfil$\alphac$ is optonal
+      \item \cppinline[bgcolor=mintinlinebox]/|$\optcb{\alphac}$|/:\hfil$\alphac$ can
+    occout zero or multiple times.
+      \item \cppinline[bgcolor=mintinlinebox]/|$\optldots$|/:\hfil Further arguments,
+    options, \ldots are possible.
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{sectionbox}[What is Java (software platform)]\nospacing
+  \begin{itemizenosep}
+    \item It is a high level, robust, secured and object-oriented programming
+  language.
+    \item Java comes with its own runtime enviroment (JRE) and API.
+  Thus every hardware or software platform that supports this enviroment
+  can run java programs.
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{sectionbox}[What does it consist of?]\nospacing
+  \begin{itemizenosep}
+      \item \imp{Java Language}: specification of the programming language.
+      \item \imp{Java Virtual Machine} \imp{(JVM)}: interpreting bytecode.
+      \item \imp{Java Library}: rich collection of standard APIs
+    \begin{itemize}[nolistsep, noitemsep]
+        \item \imp{Java Standard Edition (SE)}: is the core Java programming platform
+      java.lang, java.io, java.math, java.net, java.util, etc.
+        \item \imp{Java Enterprise Edition (SE)}: large scale, distributed system
+      built on top of Java SE e.g. libraries for database access, remote method invocation (RMI), web services, XML,\ldots
+        \item \imp{Java Micro Edition (SE)}: libraries for developing applications for mobile devices and embedded systems.
+    \end{itemize}
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{sectionbox}[Features of Java]\nospacing
+  \begin{itemizenosep}
+      \item Object Oriented Programing (OOP) language.
+      \item Platform independent.
+      \item Interpreted.
+      \item Multithreaded.
+      \item Secured: programs run inside virtual enviroment.
+      \item Automatic Garbage Collection.
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{notebox}[Why do we need yet another programming language?]\nospacing
+  The problem with C/C++/\ldots is that they are designed to be compiled for
+  a specific target.\\
+  Eventhough its possible to compile a C++ program for just any type of CPU, to
+  do so requires a full C++ compiler targeted for that CPU.\\
+  \imp{Problem} writing compilers is expensive and time-consuming.\\
+  \imp{Thus} the goal was to create a \imp{platform-independent language}
+  that could be used to produce code that would run on a variety of CPUs under
+  different enviroments.
+\end{notebox}
+\begin{notebox}[Types of Java Applications]\nospacing
+  \begin{numberlist}
+      \item \imp{Standalone Applications}: Desktop/window-based applications.
+      \item \imp{Web Applications}: applications that run on the server side and
+    create dynamic pages.
+      \item \imp{Enterprise Applications}: are usually distributed, such as
+    banking applications etc.
+      \item \imp{Mobile Applications}: applications that are created for mobile
+    devices e.g. Android.
+  \end{numberlist}
+\end{notebox}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% TeX-command-extra-options: "-shell-escape"
+%%% End:

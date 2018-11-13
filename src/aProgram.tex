@@ -1,0 +1,83 @@
+\section{Building a Java Program}
+\begin{defnbox}\nospacing
+  \begin{defn}[Compiler]
+    Is a computer program (or set of programs) that translates source code of a high-level programming language, e.g. C++ into a low level language (e.g. assembly language or direct into machine language).
+  \end{defn}
+\end{defnbox}
+\begin{defnbox}\nospacing
+  \begin{defn}[Virtual Machine (VM)]
+    Is a software application that simulates a computer, but hides the underlying operating system and hardware from the programs that
+    interact with the VM.
+  \end{defn}
+\end{defnbox}
+\begin{sectionbox}\nospacing
+\begin{itemizenosep}
+    \item \rdb{Soource code} \javainline/file.java/: is first written in plain
+  text files ending with a \javainline/.cpp/ extension.\\
+  \imp{Requirements}
+  \begin{numberlist}
+      \item Each source file can contain at most one public class.
+      \item If there is a public class, then the class name and file name must match.
+  \end{numberlist}
+    \item \rdb{Bytecode} \javainline/file.class/: are created by the \rdb{java compiler} \tcshinline{javac.exec} from
+  source code.\\
+  \imp{Compiling source code}:
+  \begin{mintlinebox}{java}
+		javac |\opta{\optc{options}}| file.java
+  \end{mintlinebox}
+\end{itemizenosep}  
+\end{sectionbox}
+\begin{sectionbox}[\optc{Options}]\nospacing
+  \begin{itemizenosep}
+      \item \javainline/-d destination_folder/: compiles file into the give
+    destination folder.
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{notebox}[Notes]\nospacing
+  \begin{itemizenosep}
+      \item Bytecode files are not files that can be read by processor of your platform yet.
+      \item Bytecoes are platform-independent instructions. Thus Java's bytecode is highly portable and can run on any platform
+    containg a JVM that supports the Java version of the bytecode.
+  \end{itemizenosep}
+\end{notebox}
+\begin{defnbox}\nospacing
+  \begin{defn}[Java Virtual Machine (JVM)/Interpreter]
+    Is a platform independent runtime enviroment that reads and interprets the the bytecode \javainline/file.class/ line by line
+    in order to execute java programs.\\
+    Its main tasks are: Loadinging the bytecode, verifying the bytecode, executing the bytecode, garbage collection,
+    thread synchronization,\ldots\\
+    \imp{Running Java bytecode}:\hfil \javainline/java file/
+  \end{defn}
+\end{defnbox}
+\begin{defnbox}\nospacing
+  \begin{defn}[Java Runtime Enviroment (JRE)]
+    \imp{JVM + Libraries}:
+    Provides the libraries, the Java Virtual Machine, and other components to run applets and applications
+    written Java. As the JVM is just an virtual enviroment, the JRE is also known as the implementation of the JVM.\\
+    It is the minimum requirement to run (not creating) java programs.
+  \end{defn}
+\end{defnbox}
+\begin{defnbox}\nospacing
+  \begin{defn}[Java Development Kit (JDK)]\leavevmode\\
+    \imp{JRE + Development Tools}:
+    It consits of the JRE plus tools such as compilers or debuggers for developing applets and applications.\\
+    Thus is necessay in order to develope and running code.
+  \end{defn}
+\end{defnbox}
+\begin{sectionbox}\nospacing
+  \begin{figure}[H]	
+    \centering{
+      \vspace{-1em}
+      \def\svgwidth{190pt}
+      \resizebox{0.8\linewidth}{!}{\input{figures/intro/program.pdf_tex}}
+    }
+  \end{figure}
+\end{sectionbox}
+\begin{notebox}[Apllets vs. Applications]\nospacing
+  All Java programs can be classified as Applications and Applets. The striking differences are that applications contain main() method where as applets do not. One more is, applications can be executed at DOS prompt and applets in a browser. We can say, an applet is an Internet application.
+\end{notebox}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% TeX-command-extra-options: "-shell-escape"
+%%% End:
