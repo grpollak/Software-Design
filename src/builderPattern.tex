@@ -1,0 +1,166 @@
+\begin{figure}[H]	
+  \centering
+    \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/builder.tex}}
+\end{figure}
+\begin{intentbox}[Intent]
+  Separate the construction of a complex object from its representation so
+that the same construction process can create different representations.
+\end{intentbox}
+\begin{partbox}[Participants]
+  \begin{itemizenosep}
+      \item \imp{Builder}: Object which is used to build other objects.
+  \end{itemizenosep}
+\end{partbox}
+\begin{codeboxNl}{java}
+public class Pizza {
+  private final int size;
+  private final boolean cheese, pepperoni, bacon;
+
+  public |\colorbox{Red}{static}| class Builder {
+    private final int size;  // required 
+    private boolean cheese = false;  // optional
+    private boolean pepperoni = false;
+    private boolean bacon = false;
+    private boolean pinapple = false;
+
+    Builder(int size) { this.size = size; }
+
+    Builder cheese(boolean c) { cheese = c; return this; }
+    Builder pepperoni(boolean p) { pepperoni=p; return this; }
+    Builder bacon(boolean b) { bacon = b; return this; }
+    // return finished build pizza (create method)
+    Pizza build() { return new Pizza(this); }
+  }  
+
+  public |\colorbox{Red}{static}| class HawaiBuilder {
+    private final int size;  // required 
+    private boolean cheese = HawaiChees;  // optional
+    private boolean pinapple = true;
+
+    Builder(int size) { this.size = size; }
+    Pizza build() { return new Pizza(this); }
+  }  
+
+  private genericPizza(Builder builder) {
+      size = builder.size;
+      cheese = builder.cheese;
+      pepperoni = builder.pepperoni;
+      bacon = builder.bacon;
+  }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Usage]{java}
+  Pizza pizza = new Pizza.|\colorbox{Red}{Builder}|(12).
+                                .cheese(true)
+                                .pepperoni(true)
+                                .bacon(true)
+                                .build();
+  Pizza pizza = new Pizza.|\colorbox{Red}{HawaiBuilder}|(12);
+\end{codeboxNl}
+\subsubsection{General Example}
+\label{subsubsec:}
+\begin{codeboxNl}[Product]{java}
+class Pizza {
+    private String dough = "";
+    private String sauce = "";
+    private String topping = "";
+
+    public void setDough(String dough) {
+        this.dough = dough;
+    }
+
+    public void setSauce(String sauce) {
+        this.sauce = sauce;
+    }
+
+    public void setTopping(String topping) {
+        this.topping = topping;
+    }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Abstract Builder]{java}
+abstract class PizzaBuilder {
+    protected Pizza pizza;
+
+    public Pizza getPizza() {
+        return pizza;
+    }
+
+    public void createNewPizzaProduct() {
+        pizza = new Pizza();
+    }
+
+    public abstract void buildDough();
+    public abstract void buildSauce();
+    public abstract void buildTopping();
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Concrete Builder]{java}
+class HawaiianPizzaBuilder extends PizzaBuilder {
+    public void buildDough() {
+        pizza.setDough("cross");
+    }
+
+    public void buildSauce() {
+        pizza.setSauce("mild");
+    }
+
+    public void buildTopping() {
+        pizza.setTopping("ham+pineapple");
+    }
+}
+
+\end{codeboxNl}
+\begin{codeboxNl}[Concrete Builder]{java}
+class SpicyPizzaBuilder extends PizzaBuilder {
+    public void buildDough() {
+        pizza.setDough("pan baked");
+    }
+
+    public void buildSauce() {
+        pizza.setSauce("hot");
+    }
+
+    public void buildTopping() {
+        pizza.setTopping("pepperoni+salami");
+    }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Director]{java}
+class Waiter {
+    private PizzaBuilder pizzaBuilder;
+
+    public void setPizzaBuilder(PizzaBuilder pb) {
+        pizzaBuilder = pb;
+    }
+
+    public Pizza getPizza() {
+        return pizzaBuilder.getPizza();
+    }
+
+    public void constructPizza() {
+        pizzaBuilder.createNewPizzaProduct();
+        pizzaBuilder.buildDough();
+        pizzaBuilder.buildSauce();
+        pizzaBuilder.buildTopping();
+    }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Customer]{java}
+public class PizzaBuilderDemo {
+    public static void main(String[] args) {
+        Waiter waiter = new Waiter();
+        PizzaBuilder hawaiianPizzabuilder = new HawaiianPizzaBuilder();
+        PizzaBuilder spicyPizzaBuilder = new SpicyPizzaBuilder();
+
+        waiter.setPizzaBuilder( hawaiianPizzabuilder );
+        waiter.constructPizza();
+
+        Pizza pizza = waiter.getPizza();
+    }
+}
+\end{codeboxNl}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

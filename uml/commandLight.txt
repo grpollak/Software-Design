@@ -1,0 +1,33 @@
+@startuml
+
+interface Command {
+  execute()
+}
+
+class LightOnCommand {
+  myLight:Light
+  execute()
+}
+
+class RemoteControl <<(Invoker)>> {
+  pressOn()
+  pressOff()
+}
+
+class Light <<(Receiver)>>{
+  turnOn()
+  turnOff()
+}
+
+class Client {
+}
+
+RemoteControl o-right-> Command
+LightOnCommand -up-|> Command
+LightOnCommand o-down-> Light : Uses >
+Client -up-> LightOnCommand : Creates >
+Client .right.> Light : May Chose >
+note left of LightOnCommand::execute
+  myLight.turnOn();
+end note
+@enduml

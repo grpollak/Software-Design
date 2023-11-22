@@ -1,0 +1,143 @@
+\begin{figure}[H]	
+  \centering
+    \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/decorator.tex}}
+\end{figure}
+\begin{intentbox}[Intent]
+  We have some basic building blocks that share common method declarations
+  but may have lots of different functionality.\\
+  $\Rightarrow$ attach dynamically additional responsibility to an object by
+  passing it to a decorator.
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/decoratorExplosion.png}
+    \caption{Inheritance vs. Decoration}
+    \vspace{-1em}
+  \end{figure}
+  \begin{align*}
+    &n: \text{ number of properties}\\[-1\jot]
+    &\text{\# of Subclasses with inheritance\&combination }&&2^n-1 \\[-1\jot]
+    &\text{\# of additoinal Classes with decoration }&&n+1
+  \end{align*}
+\end{intentbox}
+\begin{partbox}[Participants]
+  \begin{itemizenosep}
+    \item \imp{Basic building blocks}: is, or are they things that we want to
+    decorate/add functionality to.
+    \item \imp{Component Interface}: declares the shared methods of the basic
+    building blocks that may be decorated by the decorator.\\
+    The component interface is also implemented by the decorator.\\
+    $\Rightarrow$ Leads to consistency between the decorator and the basic
+    building blocks by declaring the methods that may be decorated.
+    \item \imp{Decorator}: Is an \textit{optional}
+    \begin{itemizenosep}
+      \item abstract wrapper class that defines the shared methods and fields of
+      the concrete decorators i.e.\ stores a reference to a basic building block
+      or more commonly
+        \item a wrapper class that
+        \begin{itemize}
+            \item stores a reference to the basic building block 
+            \item simply calls the to be decorated methods of the reference to
+          the building block
+        \end{itemize}
+    \end{itemizenosep}
+      \item \imp{Client}: creates decorated classed by handing/decorating basic
+      building blocks by decorators.
+  \end{itemizenosep}
+\end{partbox}
+\begin{notebox}[Note]\nospacing
+  A concrete Decorator class is useful if concreteDecorators do not decorate
+  all methods that may possibly decorated!
+\end{notebox}
+\begin{codeboxNl}[Component e.g.\ Figure]{java}
+  interface Component{
+    public |\optc{type}| op1(|\optc{args}|);    // e.g. draw
+    public |\optc{type}| op2(|\optc{args}|);    // e.g. setBounds
+  }
+\end{codeboxNl}
+\begin{codeboxNl}[Concrete Component/Basic Building Block e.g.\ Rectangle]{java}
+  class concreteCompA implements Component{
+    public |\optc{type}| op1(|\optc{args}|){
+        |\\optc{do something1}|
+    };
+    public |\optc{type}| op2(|\optc{args}|){
+        |\optc{do something2}|
+    }
+  }
+\end{codeboxNl}
+\begin{codeboxNl}[Decorator]{java}
+class Decorator implements Component{
+  Component inner;
+  public Decorator(Component inner){
+    this.inner = inner;
+  }
+  // No decoration yet
+  public |\optc{type}| op1(|\optc{args}|){
+    inner.op1(|\optc{args}|);
+  }
+
+  public |\optc{type}| op2(|\optc{args}|){
+    inner.op2(|\optc{args}|);
+  }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[ConcreteDecorator e.g.\ ColorDecorator]{java}
+class op1Decorator extends Decorator{
+  @override
+  public |\optc{type}| op1(|\optc{args}|){
+    // Decorate before
+    inner.op1(|\optc{args}|);
+    // Decorate after
+    addFunctionality(|\optc{args}|);
+  }
+
+  public |\optc{type}| addFunctionality(|\optc{args}|){
+    // Do something
+  }
+}
+\end{codeboxNl}
+\begin{notebox}[Note]\nospacing
+  \javainline{inner} may very well be another \javainline{concreteDecorator}
+  and not a basic building block.
+\end{notebox}
+\begin{codeboxNl}[Client]{java}
+  Oval ov = new Oval();
+  RedColorDecorator redRec = new RedColorDecorator(ov);
+\end{codeboxNl}
+\begin{codeboxNl}[Client Example 2]{java}
+  // MobilePhone implements Phone and has methods vibration and color
+  MobilePhone m = new MobilePhone();
+  RedColorDecorator redRec = new RedColorDecorator(ov);
+  Phone redVibratingPhone =
+          new RedColorDecorator(new VibrationDecorator(m));
+\end{codeboxNl}
+\begin{notebox}[Notes]\nospacing
+  \begin{itemizenosep}
+      \item May apply decorator before or after e.g.\
+      may use decorator for some type safety checking
+      \item 
+  May also make sense to pass inner to setter method.
+  \end{itemizenosep}
+\end{notebox}
+\subsubsection{Fields}
+\label{subsubsec:Fields}
+\begin{sectionbox}\nospacing
+ Fields cannot be decorated explicitly \imp{but} if the basic building blocks
+ use \javainline{getters} and \javainline{setters} then we may decorate them
+ implicitly via those methods.
+\end{sectionbox}
+\begin{notebox}[Decorator vs State vs Strategy]\nospacing
+  \begin{itemizenosep}
+      \item A \tc{section}{Decorator} changes an object’s skin: that is it
+    usually adds functionality (decorates) e.g.\ DrawTools may be decorators of
+    the view.
+      \item A \tc{section}{Strategy} changes an object’s guts: that is it is
+      likely to change the internal strategy
+      \item \tc{section}{State} changes an object’s guts: that is it is
+      likely to changed its functionality completely 
+  \end{itemizenosep}
+\end{notebox}
+\todo[inline]{Add type tests and problems (rest of slids)}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

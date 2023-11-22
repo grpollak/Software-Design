@@ -12,14 +12,14 @@
 \end{defnbox}
 \begin{sectionbox}\nospacing
 \begin{itemizenosep}
-    \item \rdb{Soource code} \javainline/file.java/: is first written in plain
-  text files ending with a \javainline/.cpp/ extension.\\
+    \item \rdb{Source code} \javainline{file.java}: is first written in plain
+    text files ending with a \javainline{.java} extension.\\
   \imp{Requirements}
   \begin{numberlist}
       \item Each source file can contain at most one public class.
       \item If there is a public class, then the class name and file name must match.
   \end{numberlist}
-    \item \rdb{Bytecode} \javainline/file.class/: are created by the \rdb{java compiler} \tcshinline{javac.exec} from
+    \item \rdb{Bytecode} \javainline{file.class}: are created by the \rdb{java compiler} \tcshinline{javac.exec} from
   source code.\\
   \imp{Compiling source code}:
   \begin{mintlinebox}{java}
@@ -29,7 +29,7 @@
 \end{sectionbox}
 \begin{sectionbox}[\optc{Options}]\nospacing
   \begin{itemizenosep}
-      \item \javainline/-d destination_folder/: compiles file into the give
+      \item \javainline{-d destination_folder}: compiles file into the give
     destination folder.
   \end{itemizenosep}
 \end{sectionbox}
@@ -42,15 +42,15 @@
 \end{notebox}
 \begin{defnbox}\nospacing
   \begin{defn}[Java Virtual Machine (JVM)/Interpreter]
-    Is a platform independent runtime enviroment that reads and interprets the the bytecode \javainline/file.class/ line by line
+    Is a platform independent runtime enviroment that reads and interprets the the bytecode \javainline{file.class} line by line
     in order to execute java programs.\\
-    Its main tasks are: Loadinging the bytecode, verifying the bytecode, executing the bytecode, garbage collection,
+    Its main tasks are: Loading the bytecode, verifying the bytecode, executing the bytecode, garbage collection,
     thread synchronization,\ldots\\
-    \imp{Running Java bytecode}:\hfil \javainline/java file/
+    \imp{Running Java bytecode}:\hfil \javainline{java file}
   \end{defn}
 \end{defnbox}
 \begin{defnbox}\nospacing
-  \begin{defn}[Java Runtime Enviroment (JRE)]
+  \begin{defn}[Java Runtime Environment (JRE)]
     \imp{JVM + Libraries}:
     Provides the libraries, the Java Virtual Machine, and other components to run applets and applications
     written Java. As the JVM is just an virtual enviroment, the JRE is also known as the implementation of the JVM.\\

@@ -1,0 +1,30 @@
+@startuml
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam notesep 0
+abstract Subject {
+  +observers
+  +attach(o : Obs)
+  +detach(o : Obs)
+  +notifyObs()
+  {abstract} getSubjectStatus()
+}
+interface Observer {
+  {abstract} update()
+}
+
+class ConcreteSubject {
+  getSubjecdtStatus()
+}
+
+class ConcreteObserver {
+  update()
+}
+
+Subject *-right-> Observer : Notifies >
+ConcreteSubject -up-|> Subject
+ConcreteObserver .up.|> Observer
+ConcreteObserver <-right- ConcreteSubject
+note top of Observer : may be an\nabstract class
+note top of Subject : may be interface or concrete
+@enduml

@@ -1,0 +1,3 @@
+[submodule "formularyETH"]
+	path = formularyETH
+	url = git@gitlab.ethz.ch:others/formularyETH.git

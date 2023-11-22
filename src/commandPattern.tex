@@ -1,0 +1,173 @@
+\begin{figure}[H]	
+  \centering
+    \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/command.tex}}
+\end{figure}
+\begin{figure}[H]	
+  \centering
+    \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/commandLight.tex}}
+\end{figure}
+\begin{notebox}[Note: UML dotted line]\nospacing
+  \begin{itemizenosep}
+      \item 
+  Is only a weak dependency and not a full association.\\
+  Client does not necessarily need to know anything about the Receiver.
+  \item here in this example we use \javainline{<<()>>} for comments 
+  \end{itemizenosep}
+\end{notebox}
+\begin{intentbox}[Intention]
+  Encapsulates an action or request into an object such that it can be invoked
+  at a later time.\\\imp{Examples}:
+  \begin{itemizenosep}
+      \item Client wants to perform action at later time: undo/redo
+      \item We want to queue requests s.t.\ the can be handled by a receiver in a
+            timely manner.
+  \end{itemizenosep}
+ encapsulate a request under an object as a command and pass it to invoker object. Invoker object looks for the appropriate object which can handle this command and pass the command to the corresponding object and that object executes the command  
+\end{intentbox}
+\begin{partbox}[Participation]
+  \begin{itemizenosep}
+      \item \imp{Command Interface}: declares an interface for executing operations.
+      In its simplest form, this interface includes an abstract execute operation. 
+      \item \imp{Concrete Command}: 
+      Each concrete Command class specifies a receiver-action pair by storing
+      the Receiver as an instance variable.\\
+      The concrete command overrides the \javainline{execute} method such that it fulfills
+      the required action/request with the help of the stored
+      \javainline{receiver} object.
+      \item \imp{Receiver}: the Receiver has the knowledge required to carry out
+      a given request/action.
+        \item \imp{Invoker}:
+      Decides when the methods is called and then asks the command to perform
+      the request.
+      The invoker is an \javainline{aggregation} ($\neq$
+      implementation) of command objects and is called invoker
+      because it can invoke the \javainline{execute} method of its stored
+      \javainline{commands}.\\
+      \imp{Thus}: it can for example:
+      \begin{itemize}
+        \item Have a list of commands to process
+                \begin{mintlinebox}{java}
+            class Invoker{
+              ArrayList<Command> l = new ArrayList<Command>();
+              |\optldots|
+              void invoke Command{
+                for(Command c : l) {
+                  // if resources available
+                  c.execute();
+                }
+              }
+          \end{mintlinebox}
+        \item Has references to the concrete commands, which can be invoked by
+        the client e.g.:
+        \begin{mintlinebox}{java}
+            class Switch{
+              private Command onCommand;
+              private Command offCommand;
+
+              public Invoker (Command on, Command off){
+                this.onCommand = on;
+                this.offCommand = off;
+              }  
+              void on(){
+                onCommand.execute();
+              }
+              void off(){
+                offCommand.execute();
+              }
+            }
+        \end{mintlinebox}
+        hence the client may a pair of on/off commands to the invoker e.g.\
+        Light/Fan,\ldots and the simply use the switch.
+      \end{itemize}
+      \item \imp{Client}:
+      The client instantiates the Invoker, the Receiver, and the concrete command objects.
+  \end{itemizenosep}
+\end{partbox}
+\begin{notebox}[Problems]\nospacing
+  If we store every movement of 1 pixel, we will have way to many move commands
+  $\Rightarrow$ store only periodically.
+\end{notebox}
+\begin{codeboxNl}[Command Interface]{java}
+public interface Command {
+    public abstract void execute();
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Fan (Receiver 1)]{java}
+class Fan {
+  public void startRotate() {
+          System.out.println("Fan is rotating");
+  }
+  public void stopRotate() {
+          System.out.println("Fan is not rotating");
+  }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Light (Receiver 2)]{java}
+class Light {
+  public void turnOn( ) {
+          System.out.println("Light is on ");
+  }
+  public void turnOff( ) {
+          System.out.println("Light is off");
+  }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Invoker]{java}
+ class Switch {
+    private Command UpCommand, DownCommand;
+    public Switch( Command Up, Command Down) {
+        UpCommand = Up; 
+        DownCommand = Down;
+    }
+    void flipUp(){ 
+      UpCommand.xecute();                           
+    }
+    void flipDown(){
+      DownCommand.execute();
+    }
+} 
+\end{codeboxNl}
+\begin{codeboxNl}[Concrete Commands]{java}
+class LightOnCommand implements Command {
+  private Light myLight;
+  public LightOnCommand ( Light L) {
+          myLight  =  L;
+  }
+  public void execute( ) {
+         myLight.turnOn( );
+  }
+}
+class LightOffCommand implements Command {
+  private Light myLight;
+  public LightOffCommand ( Light L) {
+          myLight  =  L;
+  }
+  public void execute( ) {
+          myLight.turnOff( );
+  }
+}
+// analoguous for fan but rotate
+\end{codeboxNl}
+\begin{codeboxNl}[Client]{java}
+public class Client {
+  public static void main(String[] args) {
+    Light  testLight = new Light( );
+    LightOnCommand testLOC = new LightOnCommand(testLight);
+    LightOffCommand testLFC = new LightOffCommand(testLight);
+    Switch testSwitch = new Switch( testLOC,testLFC);       
+    testSwitch.flipUp( );
+    testSwitch.flipDown( );
+    Fan testFan = new Fan( );
+    FanOnCommand foc = new FanOnCommand(testFan);
+    FanOffCommand ffc = new FanOffCommand(testFan);
+    Switch ts = new Switch( foc,ffc);
+    ts.flipUp( );
+    ts.flipDown( ); 
+  }
+}          
+\end{codeboxNl}
+%%% TeX-command-extra-options: "-shell-escape"
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

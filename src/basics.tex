@@ -6,10 +6,10 @@
 		public static void main(String[] args) { |\ldots| }
   \end{mintlinebox}
   \begin{itemizenosep}
-      \item \javainline/pulic/: accessible from everywhere.
-      \item \javainline/static/: defined on the class level (not bound to instances).
-      \item \javainline/void/: does not return a result ($\Rightarrow$ procedure)
-      \item \javainline/args/: argument, array of command-line arguments
+      \item \javainline{pulic}: accessible from everywhere.
+      \item \javainline{static}: defined on the class level (not bound to instances).
+      \item \javainline{void}: does not return a result ($\Rightarrow$ procedure)
+      \item \javainline{args}: argument, array of command-line arguments
   \end{itemizenosep}
 \end{sectionbox}
 \subsection{Packages}
@@ -24,11 +24,11 @@
     Identifies the package that a Java program belongs to.
     The package statement should be the first line in the source file
     (there can be only one package statement per source file).\\
-    \imp{Package Statement}:\hfil \javainline/package package-name;/
+    \imp{Package Statement}:\hfil \javainline{package package-name;}
   \end{defn}
 \end{defnbox}
 \begin{sectionbox}[Compiling source files with package statements]\nospacing
-  Using the \javainline/-d destination_fodler/ option will create a folder with
+  Using the \javainline{-d destination_fodler} option will create a folder with
   the given package name \textit{in the package statement} will be created in
   the given destination folder (if not existing), and place the complied source file
   into it.
@@ -38,9 +38,9 @@
 \end{sectionbox}
 \begin{sectionbox}[Using Packages]\nospacing
   \begin{itemizenosep}
-      \item \javainline/package_name.identifier/: use fully qualified names.
-    	\item \javainline/import package_name.*/: import the whole package.
-    	\item \javainline/import package_name.identifier/: import certain identifiers.
+      \item \javainline{package_name.identifier}: use fully qualified names.
+    	\item \javainline{import package_name.*}: import the whole package.
+    	\item \javainline{import package_name.identifier}: import certain identifiers.
   \end{itemizenosep}
 \end{sectionbox}
 \begin{stylebox}[The default package]\nospacing

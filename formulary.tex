@@ -20,30 +20,37 @@
 
 % Document class
 % ------------------------------------------------------------------------------
-\documentclass[fourColumns]{formularyETH/formularyETH}
+\documentclass[
+    fourColumns,
+    landscape,
+]{formularyETH/formularyETH}
 % formuaryETH packages
 % ------------------------------------------------------------------------------
 \usepackage{formularyETH/formularyETH_GeneralPackages}
+\usepackage{formularyETH/formularyETH_theorems}
+\usepackage{formularyETH/formularyETH_items}
 \usepackage{formularyETH/formularyETH_underline}
 \usepackage{formularyETH/extern/formularyETH_scientific}
 \usepackage{formularyETH/extern/formularyETH_tikz}
 \usepackage{formularyETH/extern/formularyETH_coding}
 \usepackage{formularyETH/extern/formularyETH_algorithms}
 \usepackage{formularyMacros}
-% -----------------------------math Formulary----------------------------------- 
+% \usepackage{aeguill}
+% -----------------------------math Formulary-----------------------------------
 % if git@gitlab.vis.ethz.ch:formularies/math.git is used as submodule
 % ------------------------------------------------------------------------------
 % Uncomment next line to obtain fallback macros for math
 % usepackage{math/formularyMacros} 
 % Other very usefull packages
 % ------------------------------------------------------------------------------
-\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny,disable]{todonotes}
 \usepackage[skip=0pt]{caption}
 \usepackage{wrapfig}
 \usepackage{subcaption}
 \usepackage{tabularx}
 % In order to use inkscape figures with transparent fillings using alpha
 \usepackage{transparent}
+\usepackage[mode=buildnew]{standalone}% requires -shell-escape
 % -----------------------------Minted------------------------------------------- 
 % minted uncomment next two lines
 % ------------------------------------------------------------------------------ 
@@ -71,22 +78,22 @@
 % ==============================================================================
 \begin{document}
 % ------------------------------------------------------------------------------ 
-	\input{src/javaIntro.tex}
-	\input{src/aProgram.tex}
+  \input{src/javaIntro.tex}
+  \input{src/aProgram.tex}
 \section{Basics}
   \input{src/basics.tex}
   \newpage
 \section{Java}
 \input{src/overview.tex}
-% 	\input{src/types.tex}
-%   \subsection{Conditional Statements}
-% 	\input{src/conditional.tex}
-%   \subsection{Container/Collections}
-%   \input{src/collections.tex}
-% \section{Classes}
-% 	\input{src/classes.tex}
-% \section*{Further Things}
-% \subsection{JUnit}
+  \input{src/types.tex}
+  \subsection{Conditional Statements}
+  \input{src/conditional.tex}
+  \subsection{Container/Collections}
+  \input{src/collections.tex}
+\section{Classes}
+  \input{src/classes.tex}
+\section*{Further Things}
+\subsection{JUnit}
 \newpage
 \section{Java}
   \input{java/Java.tex}
@@ -96,17 +103,56 @@
 % ==============================================================================
 \section{Behavioral Patters}
 \label{subsubsec:Behavirol}
-\subsection{Composite}
-  \input{src/Composite.tex}
+\input{src/behavioralPatterns.tex}
+\subsection{Observer\slash Listener\slash Publish-Subscriber}
+\label{subsubsec:Observer}
+\input{src/observer.tex}
+\subsection{State Patterns}
+\label{subsubsec:StatePatterns}
+\input{src/state.tex}
+\subsection{Strategy Patterns}
+\label{subsubsec:StrategyPatterns}
+\input{src/strategy.tex}
+\subsection{Null Object Pattern}
+\label{subsubsec:NullObjectPattern}
+\input{src/nullObjPattern.tex}
+\subsection{Composite Pattern}
+\label{subsubsec:CompositePattern}
+\input{src/compositePattern.tex}
+\todo[inline]{MVC\&Callback lecture 7}
+\subsection{Prototype Pattern}
+\label{subsubsec:PrototypePattern}
+\input{src/prototypePattern.tex}
+\subsection{Decorator Pattern}
+\label{subsubsec:DecoratorPattern}
+\input{src/decoratorPattern.tex}
+\subsection{Proxy Pattern}
+\label{subsubsec:ProxyPattern}
+\input{src/proxy.tex}
+\subsection{Command Pattern}
+\label{subsubsec:CommandPattern}
+\input{src/commandPattern.tex}
+\subsection{Factory Method}
+\label{subsubsec:factoryMethod}
+\input{src/factoryMethod.tex}
+\subsection{Abstract Factory Pattern}
+\label{subsubsec:Abstractfactory}
+\input{src/abstractFactory.tex}
+\subsection{Singleton Pattern}
+\label{subsubsec:singletonPattern}
+\input{src/singletonPattern.tex}
+\subsection{Builder Pattern}
+\label{subsubsec:builderPattern}
+\input{src/builderPattern.tex}
 \section{Structural Patters}
 \label{subsubsec:Behavirol}
 \section{Creational Patters}
 \label{subsubsec:Behavirol}
-% ======================================================================
-% Todo
-% ======================================================================
-\input{src/TODO.tex}
-  
+% % ======================================================================
+% % Todo
+% % ======================================================================
+% \input{src/java.tex}
+% \input{src/TODO.tex}
 % ==============================================================================
 % Document end
 % ==============================================================================

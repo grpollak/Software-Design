@@ -1,0 +1,27 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Context {
+  state
+  +methodA()
+  +allMethods()
+  +setState(State s)
+  +getstate()
+
+}
+
+abstract State {
+  -methodA()
+  -methodB()
+}
+
+class ConcreteState1 {
+}
+
+class ConcreteState2 {
+}
+
+Context *-right-> State
+ConcreteState1 -up-|> State
+ConcreteState2 -up-|> State
+@enduml

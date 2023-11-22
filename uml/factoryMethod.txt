@@ -1,0 +1,33 @@
+@startuml
+ 
+package "Framework" {
+  abstract Creator {
+    +anOperation()
+    +{abstract} factoryMethod():Product
+  }
+  abstract Product {
+    {abstract} method1()
+    {abstract} method2()
+  }
+}
+ 
+package "ConcreteExample" {
+  class ConcreteCreator {
+    +factoryMethod():Product
+  }
+  class ConcreteProduct {
+    method1()
+    method2()
+  }
+}
+ 
+
+note left of ConcreteCreator::factoryMethod
+  return new ConcreteProduct();
+end note
+Creator -right-> Product : Creates >
+ConcreteCreator -right-> ConcreteProduct : Creates >
+ConcreteCreator -up-|> Creator
+ConcreteProduct -up-|> Product
+
+@enduml

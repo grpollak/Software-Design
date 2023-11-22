@@ -1,0 +1,18 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Context {
+  {abstract} strategy
+}
+
+class ContextA {
+  strategy
+}
+
+class ContextB {
+  strategy
+}
+
+ContextA -up-|> Context
+ContextB -up-|> Context
+@enduml

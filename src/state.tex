@@ -1,0 +1,198 @@
+\begin{figure}[H]	
+  \centering
+    \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/state.tex}}
+\end{figure}
+\begin{intentbox}[Intent]\nospacing
+    Context related behavior depending on the current state
+\end{intentbox}
+\begin{partbox}[Participants]\nospacing
+  \begin{itemizenosep}
+      \item \imp{Context}: is the concrete thing (e.g.\ Vending Machine, Ventilator) that has a reference/stores the concrete state
+      and acts depending on it by calling the \javainline{request} or \javainline{doAction} method of its current state reference.
+      \item \imp{Abstract/Interface State}: is
+    \begin{itemizenosep}
+        \item Is an interface that will be implemented by the \textit{concrete states} and defines all the possible actions
+        that each \textit{concrete state} may be able to perform or
+          \item An abstract base class if
+        \begin{itemize}
+            \item we want to define default behaviors of the shared methods:
+             \begin{mintlinebox}{java}
+               privat void doAction1(|\optc{args}|){
+                 throw new IllegalStateException();
+               }
+             \end{mintlinebox}
+            \item the concrete states store shared similar attributes/methods that we do not want to define inside the context.
+        \end{itemize}
+    \end{itemizenosep}
+    \item \imp{Concrete State}: Implements the methods of the \textit{state interface}
+  \end{itemizenosep}
+\end{partbox}
+\begin{notebox}[Note]\nospacing
+  \begin{itemizenosep}
+      \item Contexts may hold multiple different states e.g.\ light state as well as temperature state.
+      \item The possible actions declared inside the state interface/abstract class \ul{may take a context object} as argument
+      in order to change the current state, if they are not defined inside the context (see \tc{section}{State changes} section).
+      \item Interfaces allow only public methods before Java9, may be another reason for using abstract classes.
+  \end{itemizenosep}
+\end{notebox}
+\begin{codeboxNl}[Context]{java}
+  class Context{
+    State state;
+    
+    public void setState(State s){
+      this.state = s;
+    }
+
+    public State getState(){
+      return state;
+    }
+
+    public doAction1(){
+      state.doAction1(|\ul{\opta{this}}|);
+    }
+
+  }
+\end{codeboxNl}
+\begin{codeboxNl}[State]{java}
+  abstract class State {
+    privat void doAction1(|\ul{\opta{Context cur}}|,|\optc{args}|){
+      throw new IllegalStateException();
+    }
+  }
+}
+\end{codeboxNl}
+\subsection*{State Changes}
+\subsubsection{Decentralized}
+\begin{sectionbox}\nospacing
+  May be initiated by the \rd{concrete state} method $\Rightarrow$
+  \begin{itemizenosep}
+    \item Concrete state object needs a reference to the \textit{context} in order to set its state:
+  \end{itemizenosep}
+\end{sectionbox}
+  \begin{codeboxNl}[Context]{java}
+    class Context{
+      State state;
+      |\optldots|
+      public doActions(){
+        state.doAction1(this);
+        state.doAction2(this);
+      }
+
+    }
+  \end{codeboxNl}
+  \begin{codeboxNl}[State]{java}
+    interface State {
+      public |\optc{retType}| doAction1(Context cur,|\optc{args}|);
+      public |\optc{retType}| doAction2(Context cur,|\optc{args}|);
+    }
+  }
+  \end{codeboxNl}
+  \begin{codeboxNl}[\rd{Concrete State}]{java}
+    concStateA implementes State {
+      public state doAction1(Context cur, |\optc{args}|);
+          // do somthing
+          cur.setState(new StateB());
+    }
+  }
+  \end{codeboxNl}
+\begin{sectionbox}\nospacing
+ \begin{itemizenosep}
+    \item \imp{Or} the state returns the new state when running an action which gets then set by the context
+ \end{itemizenosep} 
+\end{sectionbox}
+\begin{codeboxNl}[Context]{java}
+  class Context{
+    State s;
+    |\optldots|
+    public doActions(){
+      s = state.doAction1();
+      s = state.doAction2();
+    }
+  }
+\end{codeboxNl}
+\begin{sectionbox}\nospacing
+ \begin{itemizenosep}
+     \item \imp{Or} the state and Concrete States are defined inside context class, thus concrete
+      states can directly set state of the context:
+ \end{itemizenosep} 
+\end{sectionbox}
+\begin{codeboxNl}[\rd{Concrete State}]{java}
+class Context{
+  State s;
+  |\optldots|
+  concStateA implementes State {
+    public state doAction1(|\optc{args}|);
+        // do somthing
+        s = setState(new StateB());
+  }
+  |\optldots|
+}
+\end{codeboxNl}
+\subsubsection{Centralized}
+\begin{sectionbox}\nospacing
+  Transitions are initiated by the context, state should be informed that it gets activated or deactivated. 
+    \begin{codeboxNl}[DrawTool (State)]{java}
+      public interface DrawTool{
+        void activate();
+        void deactivate();
+      }
+    \end{codeboxNl}
+    \begin{codeboxNl}[DrawView (Context)]{java}
+      DrawTool tool; // current state
+      
+      public void setTool(DrawTool tool){ // set conc state;
+        if(tool == null) throw new IllegalArgumentException();
+        if(this.tool != null) this.tool.deactivate();
+        this.tool = tool;
+        this.tool.activate();
+      }
+    \end{codeboxNl}
+\end{sectionbox}
+\begin{notebox}[Note]\nospacing
+  If the initial state is set in the constructor of the context we can omit:
+  \javainline{if(this.tool != null) this.tool.deactivate();}
+\end{notebox}
+\subsection*{Creation of State Objects}
+\subsubsection{States are created on demand}
+\begin{sectionbox}\nospacing
+ \begin{codebox}{java}
+   public void stateMethod1(Context cur){
+     cur.setState(new StateB());
+   }
+ \end{codebox} 
+\end{sectionbox}
+\subsubsection{States are stored}
+\begin{sectionbox}\nospacing
+  States are stored in variable or list that is accessible by all concrete states
+  $\Rightarrow$ thus states are for example stored inside context.
+\end{sectionbox}
+ \begin{codebox}[Context]{java}
+   class Context{
+     State s;
+     |\optldots|
+     private final State CONC_STATE_A = new CStateA();
+     private final State CONC_STATE_B = new CStateB();
+     private final State INIT = new InitState();
+ }
+ \end{codebox} 
+ \begin{codebox}[Abstract State Class]{java}
+   public void stateMethod1(Context cur){
+     cur.setState(c.INIT);
+   }
+ \end{codebox} 
+ \begin{codebox}[Abstract State Class]{java}
+   public void stateMethod2(Context cur){
+     throw new IllegalStateException();
+   }
+ \end{codebox} 
+\begin{notebox}[Examples]\nospacing
+  \begin{itemizenosep}
+      \item DrawTool (drawing state)
+      \item DrawGrid (constrain the mouse coordinates)
+      \item Handles (CTRL/SHIFT pressed)
+  \end{itemizenosep}
+\end{notebox}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

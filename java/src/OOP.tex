@@ -12,7 +12,7 @@
 \label{subsubsec:Static}
 \begin{defnbox}\nospacing
   \begin{defn}[Static Fields]\label{defn:staticFields}
-    Per class fields, accessible via class (or instance)
+    Per class fields that exist only per class ($\neq$ per object), accessible via class (or instance)
     \begin{itemizenosep}
         \item Bound to class (available even if no instance has been created)
         \item Only one copy of the attribute (identical for all instances)
@@ -93,7 +93,7 @@
   \begin{defn}[Dynamically Typed Languages]
      If the type is associated with/depends on run-time \imp{values}, and not named variables/fields/etc\\
      \Advantage\ we do not have to specify types every time.\\
-     \Drawback do type checking at run-time
+     \Drawback\ need to do type checking at run-time
   \end{defn}
 \end{defnbox}
 \label{subsubsec:Polymorphism}
@@ -116,7 +116,7 @@
   \begin{defn}[Dynamic Type]\label{defn:dynamicType}
     Is the type of the object assigned to a reference variable.\\
     Dynamic types of reference variables may change with every assignment.\\
-    $\text{Dynamic Type}\subseteq\text{Static Type}$ as the dynamic type most
+    $\text{Dynamic Type}\subseteq\text{Static Type}$ as the dynamic type must
     full fill at least the guarantees of the static type.
   \end{defn}
 \end{defnbox}
@@ -137,6 +137,7 @@
       a.methodToResolveTo(StaticTypeOfb b);
     \end{mintlinebox}
     \javainline{staticTypeOfb} decides which overloaded method to call.
+    \todo[inline]{Check if thats correct}
   \end{defn}
 \end{defnbox}
 \begin{defnbox}\nospacing
@@ -144,28 +145,63 @@
     The runtime chooses a function implementation
     \begin{numberlistnosep}
         \item Based on the function \rd{signature} chosen at compile time
-      (dynamic binding)
+      (static binding)
         \item Depending on the dynamic type of the object referenced by
       \javainline{a} in order to chose an actual implementation of
       \begin{mintlinebox}{java}
           DynamicTypeOfa.methodToResolveTo(StaticTypeOfb b)
       \end{mintlinebox}
     \end{numberlistnosep}
+    \todo[inline]{Check if thats correct}
   \end{defn}
 \end{defnbox}
 \begin{notebox}[Note]\nospacing
   For non-overloaded methods only the dynamic type of the reference variable
   decides which method to call.
+    \todo[inline]{Check if thats correct}
+\end{notebox}
+\begin{notebox}[Static Class methods]\nospacing
+  Cannot be overriden because they are not dispatched on the object instance at
+  runtime. The compiler decides which method gets called.\\
+  \imp{Thus} even if we overwrite them (and the compiler does not complain),
+  it will always be called the method of the static type and not the dynamic.
 \end{notebox}
 \begin{codeboxNl}[Dynamic Type Inference]{java}
   if( ref instanceof Type)
 \end{codeboxNl}
-\begin{codeboxcomment}[Type Casts]{0.3}{java}{
-    A runtime error is thrown if the dynamic type of \javainline{ref} is not a
-    Type or extension thereof.
+\todo[inline]{check if this is only for conceret or also base type}
+\begin{notebox}[Note]\nospacing
+    A runtime error is thrown if the dynamic type of \javainline{ref} is not a Type or extension thereof. (Type) ref;
+\end{notebox}
+\begin{defnbox}\nospacing
+  \begin{defn}[Covariant Typing]\label{defn:covariantTying}
+    Covariant return, means that when one overrides a method, the return type
+    of the overriding method is allowed to be a subtype of the overridden
+    method's return type.\\
+    This allows to narrow down return type of an overridden method
+    without any need to cast the type or check the return type.\\
+    \imp{Thus}: Co-variant return types follow the \rd{Liskov substitution principle}.
+  \end{defn}
+\end{defnbox}
+\begin{notebox}[Note: Invariant Types]\nospacing
+    Before Java 5.0 it was not possible change the return type of an overriden
+    method, the return type was said to be \rd{invariant}.
+\end{notebox}
+\begin{codeboxNl}[Covariant Example]{java}
+  public class Animal {
+      protected Food seekFood() {
+          return new Food();
+      }
   }
-  (Type) ref;
-\end{codeboxcomment}
+
+  public class Dog extends Animal {
+    @Override
+    protected Food seekFood() {
+        // covariant return type
+        return new DogFood();
+    }
+}
+\end{codeboxNl}
 \subsection{Abstract Classes}
 \begin{defnbox}\nospacing
   \begin{defn}[Abstract Methods]
@@ -183,7 +219,11 @@
 \end{defnbox}
 \begin{defnbox}\nospacing
   \begin{defn}[Abstract Classes]
-    Are classes that how stand in an ``\rd{is-a}'' relationship with their subclasses:
+    Are classes that stand in an ``\rd{is-a}'' relationship with their subclasses:
+    \begin{figure}[H]	
+      \centering
+        \resizebox{0.35\linewidth}{!}{\tikzset{font=\Huge}\input{uml/abstract_class.tex}}
+    \end{figure}
     \begin{itemizenosep}
       \item Cannot be instantiated
       \item Usually have one or more abstract methods
@@ -196,17 +236,19 @@
 \end{defnbox}
 \begin{notebox}[Note]\nospacing
   An abstract class must not necessarily have an abstract method.\\
-  Useful to declare classes abstract that cannot/may not be initiated but (but extended)
+  Useful to declare classes abstract that cannot/may not be initiated but are
+  supposed to be extended.
 \end{notebox}
 \begin{notebox}[Note: \normalfont{Derived Classes}]\nospacing
   \begin{itemizenosep}
       \item Have to override (implement) all \javainline{abstract} methods
       \item Or have to be declared abstract as well, if not all abstract methods
     are overridden.
+      \item Can only extend one Class.
   \end{itemizenosep}
 \end{notebox}
 \begin{notebox}[Note]\nospacing
-  Arrays of an abstract base type may be instantiated sine No instances are
+  Arrays of an abstract base type may be instantiated sine no instances are
   created (only reference variables)
   \begin{mintlinebox}{java}
     ContainerType[] name = new ContainerType[Number]
@@ -226,6 +268,10 @@
   \begin{defn}[Interfaces=pure abstract class]\label{defn:interfaces}
     Have to be implemented by the class that uses the interface and represent a
     ``\rd{can-do}'' relationship:
+    \begin{figure}[H]	
+      \centering
+        \resizebox{0.35\linewidth}{!}{\tikzset{font=\Huge}\input{uml/interface.tex}}
+    \end{figure}
     \begin{itemizenosep}
       \item Have only \javainline{public} and \javainline{abstract} methods
       \item Attributes are by default \javainline{public,static} and
@@ -248,7 +294,7 @@
   \end{defn}
 \end{defnbox}
 \begin{notebox}[Note: Java 8 default methods]\nospacing
-  Can be implemented inside interfaces and are able access other methods.
+  Can be implemented inside interfaces and are able to access other methods.
   Allows to extend interfaces without breaking existing classes that implement
   the interface.
 \end{notebox}
@@ -263,8 +309,8 @@
   \end{itemizenosep}
 \end{stylebox}
 \begin{notebox}[Interfaces as function arguments]\nospacing
-  Methods with Interfaces as type can be called with any class implementation
-  that interface.
+  Methods with interfaces as function argument can be called with any class that
+  implements the interface.
 \end{notebox}
 \begin{notebox}[Interface Reference]\nospacing
   Interfaces can be used as reference variable for all subclasses \imp{but} be
@@ -305,11 +351,45 @@
     \end{itemizenosep}
       \item Interfaces
     \begin{itemizenosep}
-        \item A class may implement sever interfaces
-        \item Abstract classes may contain no implementations 
+        \item A class may implement several interfaces
+        \item Interfaces may contain no implementations 
     \end{itemizenosep}
   \end{itemizenosep}
 \end{notebox}
+\begin{defnbox}\nospacing
+  \begin{defn}[Anonymous Class]
+    Is an inner class without a name and for which only a single object is
+    created.
+    An anonymous inner class can be useful when making an instance of an object
+    with certain "extras"
+    such as overloading methods of a class or interface, without having to
+    actually subclass a class.\\
+    The syntax of an anonymous class expression is like the invocation of a
+    constructor,
+    except that there is a class definition contained in a block of code.
+\begin{mintlinebox}{java}
+interface|\optc{/}|class MyClass{
+  // definition
+}
+
+// Anonymous object with extras
+MyClass obj = new MyClass() 
+{
+  // data members and methods
+  @Override
+  public my_func |\optc{typ}|(|\optc{typ}|) 
+  {
+    |\optldots|
+  }   
+
+  public new_func |\optc{typ}|(|\optc{typ}|) 
+  {
+    |\optldots|
+  }   
+};
+\end{mintlinebox}
+  \end{defn}
+\end{defnbox}
 \begin{defnbox}\nospacing
   \begin{defn}[Marker Interface]\label{defn:markerInerface}
     Is an empty interface, that can be used to add a certain
@@ -318,7 +398,7 @@
   \end{defn}
 \end{defnbox}
 \begin{defnbox}\nospacing
-  \begin{defn}[Functional Interface \javainline{@FunctionalInterface}]\label{defn:functionalInterface}
+  \begin{defn}[\\Functional Interface \javainline{@FunctionalInterface}]\label{defn:functionalInterface}
     Is an interface with a single abstract method:
     \begin{mintlinebox}{java}
       @FunctionalInterface
@@ -336,9 +416,53 @@
     \item Default methods are not abstract and do not count.
   \end{itemizenosep}
 \end{notebox}
-\begin{sectionbox}[Lambda Expressions and Functional Interfaces]\nospacing
-  
-\end{sectionbox}
+\begin{defnbox}\nospacing
+  \begin{defn}[Lambda Expressions]
+    Is a block of code that you can pass around so it can be executed later.
+    \begin{mintlinebox}{java}
+      |\optab{var = }|(|\optc{Typ1 arg1, Typ2 arg2,\ldots}|) -> |\optc{\text{single expressions}}|;
+      // or
+      |\optab{var = }|(|\optc{args}|) -> |\optc{\{\text{expressions}\}}|
+    \end{mintlinebox}
+    You never specify the result type of a lambda expression. It is always
+    inferred from context.
+  \end{defn}
+\end{defnbox}
+\begin{notebox}[Note]\nospacing
+  \begin{itemizenosep}
+      \item If the argument types the lambda expression can be inferred, we can
+    omit them.
+      \item For no arguments we still need to write empty parentheses
+    \javainline{()}.
+      \item If a method has a single parameter with inferred type, you can even
+    omit the round parentheses:\\
+    \begin{mintlinebox}{java}
+    ActionListener listener = event ->
+    System.out.println("The time is " + new Date());
+    \end{mintlinebox}
+  \end{itemizenosep}
+\end{notebox}
+\begin{defnbox}\nospacing
+  \begin{defn}[\\Functional Interfaces Lambda Expressions]\label{defn:FunctionalInterfacesAndLambda}\leavevmode\\
+    We can use Lambda expressions to define the anonymous functions at a point.\\
+    This is really convenient as we do not have to define a subclass or
+    anonymous class but can simply supply a lambda expression whenever an object
+    of an interface with a single abstract method is expected.
+    \begin{mintlinebox}{java}
+    subj_obj.addActionListener((ActionEvent e) -> {
+      |\optldots|
+      });
+      // or even just
+    subj_obj.addActionListener(e -> {
+      |\optldots|
+      });
+    \end{mintlinebox}
+    \imp{Note}: the provided lambda function is than basically an
+    \tc{section}{observer} (\cref{subsubsec:Observer}) getting triggered when the \tc{section}{subject}
+    notifies this function.
+  \end{defn}
+\end{defnbox}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../../formulary"

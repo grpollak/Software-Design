@@ -1,0 +1,17 @@
+@startuml
+skinparam linetype ortho
+abstract Observable {
+  +observers
+  +attach(o : Obs)
+  +detach(o : Obs)
+  +notifyObs(<color:red>Object args</color>)
+  {abstract} getSubjectStatus()
+}
+
+interface Observer {
+  {abstract} update(
+  {abstract}<color:red>Observable src, Object args</color>)
+}
+
+Observable"*" -right-> "*" Observer 
+@enduml

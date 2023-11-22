@@ -1,0 +1,472 @@
+% java -jar /opt/plantuml/plantuml.jar -verbose -tlatex observer.txt; mv observer.latex observer.tex
+\begin{figure}[H]	
+  \centering
+    \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/observer.tex}}
+\end{figure}
+\begin{intentbox}[Intent]\nospacing
+  \begin{itemize}
+      \item Consistency assurance between cooperating objects without connecting them too much.
+      \item  One-to-many relation between objects which allows to inform the
+        dependent objects about state changes
+  \end{itemize}
+\end{intentbox}
+\begin{codeboxNl}[Observer]{java}
+  interface Observer{
+    void update ();
+  }
+\end{codeboxNl}
+\begin{codeboxNl}[Subject]{java}
+class Subject {
+  private List <Observer > observers = new ArrayList <Observer >();
+
+  public void addObserver(Observer o) {
+    // method of List
+    observers.add(o);
+  }
+
+  public void removeObserver(Observer o) {
+    // method of List
+    observers.remove(o);
+  }
+
+  protected void notifyObservers () {
+    // inform all Observers that we have changed
+    for(Observer obs : observers) {
+      // Let (concrete) observers handle it
+      obs.|\ul{update}| ();
+    }
+  }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Concrete Subject]{java}
+class ConcSubject extends Subject {
+  private int state;
+  public int getState (){
+    return state;
+  }
+
+  public void setState(int val){
+    state = val;
+    notifyObservers();
+  }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Concrete Observer]{java}
+class ConcObserver implements Observer {
+  private |\ul[ulc4]{ConcSubject s}|;
+  ConcObserver (ConcSubject s){
+    this.s = s;
+    s.addObserver(this);
+  }
+
+  public void |\ul{update}| (){
+    // take appropriate steps
+  }
+}
+\end{codeboxNl}
+\begin{partbox}[Participants]\nospacing
+  \begin{itemizenosep}
+      \item \imp{Observer}: typically an interface that declares methods to
+      handle notifications.
+      \item \imp{Subject}: maybe concrete or interface knows its observers over
+      the observer interface (guarantee that the method \ul{\javainline{update}}
+      exists).
+        \item \imp{Concrete Observer}:
+      \begin{itemize}
+          \item Handles state changes of its observable
+          \item Implements the observer interface to keep its state consistent with
+                the subject
+          \item May maintain a \ul[ulc4]{reference} to a concrete subject (pull-model)
+        \todo[inline]{Check if ref is really because of pull model}
+      \end{itemize}
+      \item \imp{Concrete Subject}: Implements/extends Subject and hence can:
+      \begin{itemize}
+          \item attach observers
+          \item detach observers
+          \item call the method notify if its state changes\\
+          (e.g.\ in a set method)
+      \end{itemize}
+  \end{itemizenosep}
+\end{partbox}
+\begin{consequencebox}[Consequence]
+  \begin{itemizenosep}
+    \item Subject does not care about the number of observers $\Rightarrow$
+    notifications are broadcast.
+    \item A simple state change/operation may lead to a (unwanted) cascade of
+  updates.\\
+  $\rightarrow$ beware of cyclic dependencies see
+  \todo[inline]{add cref}
+  \end{itemizenosep}
+\end{consequencebox}
+\begin{notebox}[Note]\nospacing
+  \begin{itemizenosep}
+      \item Thus it is up to the observer to handle or \imp{ignore}
+    notifications.
+      \item When should \javainline{notifyObservers} be called?
+    \begin{itemizenosep}
+        \item \imp{Automatically}: at every state change\\
+      $\Rightarrow$ many updates
+        \item \imp{Explicitly}: after a set of changes\\
+      $\Rightarrow$ responsibility e.g.\
+      \begin{itemize}
+          \item Asynchronous at idle times 
+          \item Use a boolean flag \javainline{changed}, that can be set in
+          order to test if object has changed see \cref{subsubsec:Java.util.Observable}
+        \todo[inline]{clarify why or what for?}
+      \end{itemize}
+    \end{itemizenosep}
+  \end{itemizenosep}
+\end{notebox}
+\subsubsection{One or Many Observables}
+\begin{figure}[H]	
+  \centering
+  \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/OneVsManyObs.tex}}
+\end{figure}
+\begin{sectionbox}[0\ldots 1 : *]\nospacing
+  \begin{itemizenosep}
+      \item Subject/Observable is usually passed to constructor of the Concrete
+    Observer ($\Rightarrow$ \ul[ulc4]{reference}).
+      \item 
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{sectionbox}[* : *]\nospacing
+  \begin{itemizenosep}
+      \item If we want that observers can observe multiple subjects and if these
+    observers may be able to ignore certain events from those subjects,
+    then the observer need to know the source of an update event.\\
+    Moreover if arguments are passed to the Observables, then the observer needs
+    to know:
+    \begin{itemize}
+        \item The arguments
+        \item The source of the event
+    \end{itemize}
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{figure}[H]	
+  \centering
+  \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/ManyObs.tex}}
+\end{figure}
+\begin{codeboxNl}[Many vs Many]{java}
+protected void notifyObservers(Object args){
+    for(Observer obs : observers){
+        obs.update(this, args);
+    }
+}
+\end{codeboxNl}
+\subsubsection{Push vs Pull Model}
+\begin{sectionbox}[\tc{section}{Push-Model}]\nospacing
+  \begin{itemizenosep}
+      \item The subject (i.e.\ the Observable) sends the observer on notification all the data it will need.
+      The observer doesn't need to query the subject for information.
+      \item Observable must know which information is needed by the observers
+      in order for them to act appropriately (or Observable sends all data)
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{sectionbox}[\tc{section}{Pull-Model}]\nospacing
+  \begin{itemizenosep}
+      \item 
+      In the pull model, the subject merely notifies the observer that something
+      happened, and the observer queries the subject based on that, to get the information it needs.
+      \item Observable send only information about what has changed
+      \item Observer has to access the Observable state (via \ul[ulc4]{reference})
+  \end{itemizenosep}
+\end{sectionbox}
+\todo[inline]{maybe add pros and cons}
+\subsection*{Pitfalls}
+\label{subsubsec:Pitfalls}
+\subsubsection{Java.util.Observable}
+\label{subsubsec:Java.util.Observable}
+\begin{sectionbox}\nospacing
+  Provides an implementation of an Observable that can be used.\\
+  \imp{But} it is never used!\\
+  \imp{Problem}: multiple inheritance is in java not possible, thus
+  \javainline{Java.util.Observable} can only be implemented if extension is not
+  defined in its own inheritance hierarchy.\\
+  \imp{Solution}: \tc{section}{composite} twin class (\cref{subsection:Composite}).\\
+    $\Rightarrow$ code duplication $\Rightarrow$ \javainline{Java.util.Observable}
+  is not used.
+\end{sectionbox}
+\begin{codeboxNl}[\texttt{Java.util.Observable}]{java}
+public interface Observer {
+  void update(Observable o, Object arg);
+}
+
+public class Observable {
+  private boolean changed = false;
+
+  // Marks this Observable as having been changed
+  protected void setChanged() { changed = true; }
+
+  // Indicates that this object has no longer changed,
+  // or that it has already notified all of its observers
+  // of its most recent change.
+  protected void clearChanged() { changed = false; }
+
+  // Tests if this object has changed.
+  public boolean hasChanged() { return changed; }
+
+  // If this object has changed, as indicated by the
+  // hasChanged method, then notify all of its observers
+  // and then call the clearChanged method to indicate
+  // that this object has no longer changed.
+  public void notifyObservers(Object arg) {
+    if (!changed) return;
+    // See section on ConcurrentModificationException
+    Object[] copy = obs.toArray();
+    clearChanged(); // before notification!
+    for (int i = copy.length-1; i>=0; i--)
+      ((Observer)copy[i]).update(this, arg);
+  }
+}
+\end{codeboxNl}
+\todo[inline]{Add observable twin class solution after we studied again composite}
+\subsubsection{ConcurrentModificationException}
+\label{subsubsec:ConcurrentModificationException}
+\begin{defnbox}\nospacing
+  \begin{defn}[\javainline{ConcurrentModificationException}]
+    We cannot change a list e.g.\ add/remove while iterating over it.\\
+    \imp{Example}: Once Observer and notify.
+  \end{defn}
+\end{defnbox}
+\begin{defnbox}\nospacing
+  \begin{defn}[OnceObserver]\label{defn:OnceObserver}
+    Is an observer that only observers for a single notification.\\
+    $\Rightarrow$ removes itself afterwards.
+  \end{defn}
+\end{defnbox}
+\begin{codeboxNl}[OnceObserver]{java}
+public class OnceObserver implements Observer {
+  public void update(Observable |$\overbrace{\text{source}}^{\mathclap{\text{Conc. Observerable}}}$|, Object arg) {
+        // take appropriate steps once
+        source.|\ul[ulc5]{removeObserver}|(this);
+  }
+}
+\end{codeboxNl}
+\begin{codeboxcomment}[Problem]{0.74}{java}{\imp{Problem}: we cannot remove an
+    observer from \javainline{obs} while iterating over it}
+protected void notifyObservers(Object arg){
+  for(Observer obs : observers){
+    obs.update(this, arg);
+  }
+}
+\end{codeboxcomment}
+\begin{sectionbox}[Solutions]\nospacing
+  \begin{circlelistnosep}
+      \item Perform the notifications on a copy of the observer list.
+      \item Delay add/remove Observer calls.
+      \item Copy the observer list upon modification.
+  \end{circlelistnosep}
+\end{sectionbox}
+\begin{defnbox}\nospacing
+  \begin{defn}[Java list to array]
+    Returns an array containing all of the elements in this list in proper sequence (from first to last element).
+    \begin{mintlinebox}{java}
+      java.util.ArrayList.toArray(a T[])
+    \end{mintlinebox}
+    \javainline{a}: is the array into which the elements of the list are to be
+    stored, if it is big enough; otherwise, a new array of the same runtime type is allocated for this purpose.
+  \end{defn}
+\end{defnbox}
+\todo[inline]{understand better how this works}
+\begin{codeboxNl}[Copy Solution]{java}
+protected void notifyObservers(){
+  Observer[] copy;
+  copy = observers.toArray(new Observer[observers.size()]);
+  for (Observer obs : copy){
+    obs.update(this);
+  }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Alternative]{java}
+protected void notifyObservers(){
+  for(Observer o : new ArrayList<>(observables)){
+    o.update(this);
+  }
+}
+\end{codeboxNl}
+\todo[inline]{maybe add Mutation or gamble, must likly not important}
+\begin{defnbox}\nospacing
+  \begin{defn}[Copy on write list]
+    Thread-safe variant of ArrayList in which
+    all mutative operations are implemented by making a fresh copy of the
+    underlying array.
+  \end{defn}
+\end{defnbox}
+\begin{codeboxNl}[Best Solution]{java}
+  private List<Observer> observers = new CopyOnWriteArrayList<>();
+  public void addObserver(Observer o) { observers.add(o); }
+  public void removeObserver(Observer o) { observers.remove(o); }
+
+  protected void notifyObservers(Object arg) {
+    for(Observer obs : observers) {
+      obs.update(this, arg);
+    }
+  }
+\end{codeboxNl}
+\subsubsection{Cyclic dependencies}
+\label{subsubsec:CyclicDependencies}
+\begin{sectionbox}[Problem]\nospacing
+  If we have a cyclic dependency we will end up in an endless loop of notifying
+  and updating, unless we take appropriate measures.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\columnwidth]{figures/cyclic_dependency.png}
+  \label{fig:cyclic_dependency}
+\end{figure}
+\imp{General Rule}: Propagate changes only if the model really changed!
+\end{sectionbox}
+\begin{sectionbox}[Solution 1: Color Listener]\nospacing
+    Break recursion inside the listener: e.g.\ we
+    check inside the color listener if the color really changed, or is still the
+    same $\Rightarrow$ recursion or nothing happens anyway.
+      \begin{mintlinebox}{java}
+        // update method of listener
+       public void colorValueChanged(Color c){
+          if (isSelected() OR_OPRATOR !c.equals(this.color))
+          // If the color really changed and isSelected is true
+          // select the checkbox menu item
+            setSelected(c.equals(this.color));
+        }
+      \end{mintlinebox}
+      \imp{Note}: not recommended to check inside the listener, as we may have
+      many different kinds of listener.
+\end{sectionbox}
+\begin{sectionbox}[Solution 2: ItemListener flag]\nospacing
+  Same as Solution 1 (but now for the ItemListener) but we use a flag instead of checking the actual value and:
+      \begin{mintlinebox}{java}
+       private boolean updating = false;
+       public void itemstateChanged(ItemEvent e){
+         if (!updating){
+            updating = true;
+            if(e.getStateChanged() == ItemEvent.SELECTED)
+                 |\ul{model}|.setColor(color);
+          }
+          updating = false;
+        }
+      \end{mintlinebox}
+      \imp{Note}: not recommended to check inside the listener, as we may have
+      many different kinds of listener.
+\end{sectionbox}
+\begin{sectionbox}[Solution 3: Concrete Model]\nospacing
+    Break recursion inside the Model: e.g.\ we check inside a subclass of JCheckBoxMenueItem
+    if the performed action has already been performed and if not we can call
+    the super method:
+      \begin{mintlinebox}{java}
+       public void setSelected(boolean b){
+          if (b != isSelected())
+            super.setSelected(b);
+        }
+      \end{mintlinebox}
+      \imp{Note}: recommended as we usually have one model and lots of different listeners.
+\end{sectionbox}
+\begin{sectionbox}[Solution 4: Color Model]\nospacing
+      \begin{mintlinebox}{java}
+       public class |\ul{ColorModel}|{
+         private Color color;
+         public void setColor(Color color){
+            if (c.equals(this.color)){
+              this.color = color;
+              notify(color);
+            }
+         }
+      }
+      \end{mintlinebox}
+      \imp{Note}: recommended as we usually have one model and lots of different listeners.
+\end{sectionbox}
+\begin{notebox}[Note]\nospacing
+  \javainline{isSelected() OR_OPRATOR !c.equals(this.color)} can be written as
+  \javainline{isSelected() != c.equals(this.color)}
+\end{notebox}
+\begin{notebox}[Note: Solution 5]\nospacing
+  Use ActionListener instead of an ItemListener: Actions are only triggered
+  by keyboard or mouse events.
+\end{notebox}
+\subsubsection{Causality of Changes}
+\label{subsubsec:CausalityofChanges}
+\begin{sectionbox}[Problem]\nospacing
+  How can we make sure that notifications of the model will be handled by the
+  observers in the same order as they were applied to the models.
+\end{sectionbox}
+\begin{sectionbox}[Solution]\nospacing
+  \begin{itemizenosep}
+      \item Queuing of state changes: model becomes asynchronous\ldots difficult
+      to program 
+      \item Queuing of notifications 
+      \item Prohibit state changes during notification
+  \end{itemizenosep}
+\end{sectionbox}
+\subsubsection{Memory Management}
+\label{subsubsec:MemoryManagement}
+\begin{sectionbox}\nospacing
+  Is automatic in java if no more reference to an object exists.\\
+  $\Rightarrow$ need to detach all observers/listeners for clean up.
+\end{sectionbox}
+\todo[inline]{add twin classes}
+\subsection{Actions}
+\begin{defnbox}\nospacing
+  \begin{defn}[Action]\label{defn:Action}
+    Is the measure to take onto and actionEvent.
+  \end{defn}
+\end{defnbox}
+\subsubsection{ActionListener and performed actions}
+\begin{defnbox}\nospacing
+  \begin{defn}[Adapter Class]\label{defn:AdapterClass}\leavevmode\\
+    Java adapter classes provide the default implementation of ActionListener
+    interfaces and implement the \javainline{public abstract void actionPerformed(ActionEvent e)} method.
+  \end{defn}
+\end{defnbox}
+\begin{sectionbox}\nospacing
+ There exist multiple ways to specify how an action Listener should react to an
+ an (action) event.\\
+ \imp{E.g.} \javainline{java.awt.event.ActionListener} is a
+ functional interface \cref{defn:functionalInterface} with a single abstract method\\
+ \javainline{public abstract void actionPerformed(ActionEvent e)}; \\
+ which defines what action to take onto an event.\\
+ In order to write an Action Listener, we can:
+ \begin{circlelistnosep}
+     \item \textbf{\tc{section}{Use the subject directly}}: the subject must implement the ActionListener
+      and hence implement the method \javainline{actionPerdormed} or
+     \item \textbf{\tc{section}{We use an Adapter Class}} (\cref{defn:AdapterClass}): that implements the action Listerner
+   Interface and register it inside the subject or
+     \item We use anonymous classes of the ActionListener and register it inside
+   the subject.
+     \item \textbf{\tc{section}{We use lambda expressions}} (\cref{defn:FunctionalInterfacesAndLambda}): of the ActionListener and register it
+   inside the subject.
+ \end{circlelistnosep}
+\end{sectionbox}
+\begin{codebox}[Direct Implementation]{java}
+  public class Subject implements ActionListener {
+    |\optldots|
+    public void actionPerformed(ActionEvent e) {
+      if(e.getSource() == push) handlePush();
+      else if(e.getSource() == pop) handlePop();
+    }
+\end{codebox}
+\begin{codebox}[Adapter Implementation]{java}
+class PushListener implements ActionListener {
+  public void actionPerformed(ActionEvent e) { |\optldots| }
+}
+subj_obj.addActionListener(instanceOfMyClass);
+\end{codebox}
+\begin{codebox}[Anonymous Implementation]{java}
+subj_obj.addActionListener(new ActionListener() {
+  public void actionPerformed(ActionEvent ae) {|\optldots|}
+  });
+\end{codebox}
+\begin{codebox}[Lambda Implementation]{java}
+subj_obj.addActionListener((ActionEvent e) -> {
+  |\optldots|
+  });
+  // or even just
+subj_obj.addActionListener(e -> {
+  |\optldots|
+  });
+\end{codebox}
+\begin{notebox}[Note: multi-method listeners]\nospacing
+  Anonymous interfaces still need to be used for implementing multi-method interfaces.
+\end{notebox}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-command-extra-options: "-shell-escape"
+%%% TeX-master: "../formulary"
+%%% End:

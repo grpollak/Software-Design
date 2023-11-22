@@ -1,0 +1,136 @@
+\begin{figure}[H]	
+  \centering
+    \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/factoryMethod.tex}}
+\end{figure}
+\begin{intentbox}[Intent]\\
+  \begin{itemizenosep}
+    \item
+    Making program code independent of concrete classes:
+    \item 
+    a class can't anticipate the class of objects it must create
+    \item
+    a class wants its subclasses to specify the objects it creates
+\end{itemizenosep}
+\imp{Thus}: creating objects by calling a factory method—either specified in an interface and implemented by child classes, or implemented in a base class and optionally overridden by derived classes—rather than by calling a constructor.
+\end{intentbox}
+{\centering
+\begin{minipage}[t]{0.5\columnwidth}
+  \begin{codeboxNl}[Bad (statically typed)]{java}
+        Interf_X ref = new X();
+  \end{codeboxNl}
+\end{minipage}
+\begin{minipage}[t]{0.45\columnwidth}
+  \begin{codeboxNl}[factoryMethod]{java}
+        InterfX ref = cCreat.getX();
+  \end{codeboxNl}
+\end{minipage}}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1.0\columnwidth]{figures/factoryMethodHandles.png}
+  \caption{}
+  \label{fig:}
+\end{figure}
+\begin{defnbox}\nospacing
+  \begin{defn}[GOF Definition]\label{defn:}
+    Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses. 
+  \end{defn}
+\end{defnbox}
+\begin{notebox}[Note]\nospacing
+  People often use Factory Method as the standard way to create objects; but it isn't necessary if: the class that's instantiated never changes.
+\end{notebox}
+\begin{notebox}[Note]\nospacing
+  The Factory Method pattern has commonly been misunderstood to mean any method whose sole purpose is to construct an object and return this created object. In most cases, this translates to a static method that abstracts the construction process of an object
+\end{notebox}
+\begin{partbox}[Participants]
+  \begin{itemizenosep}
+    \item \imp{Abstrac/Interface Product}: specifies type of product to be
+  created e.g.\ HandleType
+    \item \imp{Abstrac/Interface Creator}: Object that will instantiate the
+  product may be
+  \begin{itemize}
+      \item an \javainline{interface} which includes one or more Factory
+    Methods, as well as any number of other methods.
+      \item an \javainline{abstract class}
+    with defined methods or even a default implementation of the Factory Method that returns a default instance of Product. 
+  \end{itemize}
+    \item \imp{Concrete Creator}: creator class ($\neq$ factory)s that uses
+    factory method \& returns different \javainline{ConcreteProduct} instances
+    (that all implement the Product interface) depending on the the concrete
+    creator. 
+  \end{itemizenosep}
+\end{partbox}
+\begin{sectionbox}[Implementation]\nospacing
+  \begin{itemizenosep}
+      \item \imp{In a static method}: simplified version of factoryMethod
+    (pattern):
+    where the Creator hierarchy is reduced to a single class and the factory
+    method is reduced to a single static method (rather than a method that is
+    overridden for each of the possible products).\\
+    The use of this \javainline{static method} allows for a single point of
+    entry into a library. We use the class in order to obtain a conrete object.
+    \begin{mintlinebox}{java}
+      public class XmlHandlerFactory {
+        public static XmlHandler createHandler() {
+          return new XmlPrintHandler();
+        }
+      }
+      |\optldots|
+      XmlHandler handler = XmlHandlerFactory.createHandler();
+    \end{mintlinebox}
+      \item \imp{Sub classes}: as discussed above
+      \item \imp{In an separate object} = \rdb{Abstract Factory pattern}
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{notebox}[Note: static approach]\nospacing
+  assumes that the \javainline{XmlHandler} creator has enough knowledge to know
+  which handler implementation is appropriate.
+\end{notebox}
+\begin{notebox}[Difference Abstrac Factroy]\nospacing
+  Factory Method is similar to Abstract Factory but without the emphasis on families.
+\end{notebox}
+\begin{codeboxNl}[Product Interface]{java}
+public interface EncryptionAlgorithm {
+  public String encrypt(String plaintext);
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Concrete Product]{java}
+public class Sha512EncryptionAlgorithm implements EncryptionAlgorithm {
+  @Override
+  public String encrypt(String plaintext) {
+      return DigestUtils.sha512Hex(plaintext);
+  }
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Abstract Creator]{java}
+ public abstract class Encryptor {
+  public void writeToDisk(String plaintext, String filename) {
+      EncryptionAlgorithm encryptionAlgorithm = getEncryptionAlgorithm();
+      String cyphertext = encryptionAlgorithm.encrypt(plaintext);
+      |\optldots|
+  }
+  public abstract EncryptionAlgorithm getEncryptionAlgorithm();
+} 
+\end{codeboxNl}
+\begin{codeboxNl}[ConcreteCreator]{java}
+  public class Sha256Encryptor extends Encryptor {
+    @Override
+    public EncryptionAlgorithm getEncryptionAlgorithm() {
+        return new Sha256CEncryptionAlgorithm();
+    }
+}
+\end{codeboxNl}
+\begin{sectionbox}[Implementation Issues]\nospacing
+  \begin{itemizenosep}
+      \item static factory implementations method cannot be overridden (as the
+    method is static) $\Rightarrow$ can be compared to a \javainline{final factory method} \item Factory methods my be parameterized to describe the product it
+    creates:
+    \begin{mintlinebox}{java}
+      Product createProduct(ProductID id)
+    \end{mintlinebox}
+    \item Factory Method in abstract base class may provide default return type.
+  \end{itemizenosep}
+\end{sectionbox}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

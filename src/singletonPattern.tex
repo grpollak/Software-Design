@@ -1,0 +1,109 @@
+\begin{intentbox}
+  Insure that a class has only one instance at a time.
+\end{intentbox}
+\begin{sectionbox}[Idea: use only static variables methods]\nospacing
+  \imp{Problems}:
+  \begin{itemizenosep}
+      \item Order in which static inializers are called is not determined
+      \begin{mintlinebox}{java}
+        class A {
+          static { System.out.println("A()"); }
+          static int x = B.x + 1;
+        }
+        class B {
+          static { System.out.println("B()"); }
+          static int x = A.x + 1;
+        }
+
+        public class Initialization {
+          public static void main(String[] args) throws Exception {
+            System.out.println("A.x = " + A.x);
+            System.out.println("B.x = " + B.x);
+          }
+        }
+      \end{mintlinebox}
+      \item We may require run-time information
+  \end{itemizenosep}
+\end{sectionbox}
+\begin{partbox}[Participants]
+  Only final Singleton class that provides a private constructor.\\
+  final such that the constructor cannot be overridden in a child class.
+\end{partbox}
+\subsubsection{Eager Initialization}
+\begin{sectionbox}\nospacing
+  \imp{Problem}: singleton is instantiated when the class is first accessed.\\
+  If the class contains other \javainline{static} fields or methods we may
+  create a costly object that we do not even need atm.
+\begin{mintlinebox}{java}
+  public final class Singleton {
+  private Singleton() { }
+    private static Singleton instance = new Singleton();
+      public static Singleton getInstance() {
+      return instance;
+    }
+  }
+\end{mintlinebox}
+\end{sectionbox}
+\subsubsection{Lazy Initialization}
+\begin{sectionbox}\nospacing
+Only create new instance if it does not already exist:
+\begin{mintlinebox}{java}
+public final class Singleton {
+  private Singleton() { }
+  private static Singleton instance = null;
+
+  public static |\colorbox{Red}{synchronized}| Singleton getInstance() {
+    if(instance == null) instance = new Singleton();
+    return instance;
+}
+\end{mintlinebox}
+\end{sectionbox}
+\begin{notebox}[Problem]\nospacing
+  \javainline{synchronized}: is important for thread safety but really expensive
+  and we need to synchronize on every \javainline{getInstance}
+\end{notebox}
+\begin{sectionbox}[Solution: singleton with double checking]\nospacing
+  Tries to avoid costly synchronization by first checking synchronized.
+  \begin{mintlinebox}{java}
+		public class Singleton {
+      private |\colorbox{Red}{volatile}| static Singleton instance;
+      public static Singleton getInstance() {
+        if(instance == null) {
+          synchronized(Singleton.class) {
+            if(instance == null) {
+              instance = new Singleton();
+            }
+          }
+        }
+        return instance;
+      }
+
+      private Singleton() { /* initialization */ }
+        // other methods
+    }
+  \end{mintlinebox}
+\end{sectionbox}
+\begin{notebox}[Note]\nospacing
+  Need to volatile so that compiler does not optimize away our if.
+\end{notebox}
+\subsubsection{Holder Initialization}
+\begin{sectionbox}\nospacing
+  Instance is created upon first access of getInstance (lazy instantiation) and
+  not on access of singleton static fields. 
+\begin{mintlinebox}{java}
+public final class Singleton {
+  private static class Holder {
+    private static final Singleton INSTANCE = new Singleton();
+  }
+  private Singleton() { }
+
+  public static Singleton getInstance() {
+    return Holder.INSTANCE;
+  }
+}
+\end{mintlinebox}
+\end{sectionbox}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

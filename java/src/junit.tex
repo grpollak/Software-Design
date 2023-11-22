@@ -1,0 +1,47 @@
+\begin{defnbox}\nospacing
+  \begin{defn}[Unit Test]\label{defn:unitTest}
+     Is a level of software testing where individual units/ components of a
+     software are tested i.e.\ we do not run \javainline{main} but test
+     individual pieces of software.
+  \end{defn}
+\end{defnbox}
+\begin{sectionbox}\nospacing
+ Is a framework for running unit tests 
+ \begin{figure}[H]
+   \centering
+   \begin{javacode}
+     import org.junit.Test
+     import static org.junit.Assert.*;
+
+     public class MyTest{
+
+       @Test
+       public void |\optc{testName1}|(){
+         
+       }
+       @Test
+       public void |\optc{testName2}|(){
+         
+       }
+     }
+   \end{javacode}
+   \caption{Basic JunitTest}
+ \end{figure}
+\end{sectionbox}
+\begin{sectionbox}[Test Class Annotations]\nospacing
+  \begin{itemizenosep}
+      \item \javainline{@Test}: indicates that a method contains unit tests
+      \begin{mintlinebox}{java}
+        @Test|\optla|expected=|\optc{IllegalException}\optra|
+      \end{mintlinebox}
+      \item \mintinline{java}{@Before/@After}: mark methods that are called
+    before and after each unit test.\\
+    \imp{Note}: can be used to set up and tear down thins needed for all tests.
+      \item \mintinline{java}{@BeforeClass/@BeforeClass}: similar to
+    \javainline{@Before} and \javainline{@After} but only run once per class.
+  \end{itemizenosep}
+\end{sectionbox}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../Java"
+%%% End:

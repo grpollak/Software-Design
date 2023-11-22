@@ -1,0 +1,8 @@
+@startuml
+
+interface Interface
+class ImplementingClass
+
+
+Interface <|.. ImplementingClass: can-do
+@enduml

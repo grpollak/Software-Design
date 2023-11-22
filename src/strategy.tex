@@ -1,0 +1,140 @@
+\begin{figure}[H]	
+  \centering
+    \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/strategy.tex}}
+\end{figure}
+\begin{intentbox}[Intent]\nospacing
+  \begin{itemizenosep}
+      \item Allow to change algorithms independently of the clients
+      \item Support extensibility with new algorithms
+      \item Make algorithms interchangeable
+  \end{itemizenosep}
+\end{intentbox}
+\begin{sectionbox}[Which problem does it solve]\nospacing
+  \begin{minipage}[t]{0.45\textwidth}
+  Strategy pattern is an alternative to specialization of context
+  class which:
+  \begin{itemizenosep}
+      \item violates the \rd{Single Responsibility Principle}
+      \item prevents interchanging the strategy of a context dynamically, as
+    subclassing statically defines the binding between context and strategy
+  \end{itemizenosep}
+  \end{minipage}
+  \begin{minipage}[t]{0.5\textwidth}
+  \begin{figure}[H]
+    \centering
+    \vspace{-1em}
+      \resizebox{\linewidth}{!}{\input{uml/strategySub.tex}}
+  \end{figure}
+  \end{minipage}
+\end{sectionbox}
+\begin{partbox}[Participants]\nospacing
+  \begin{itemizenosep}
+      \item \imp{Context}: 
+      is the real thing e.g.\
+      \begin{itemize}
+          \item A secure channel
+          \item Container
+          \item TransportationToAirport
+      \end{itemize}
+      that uses a concrete strategy.\\
+      Thus it must have a reference/stores an instance of the concrete strategy.\\
+      The name of the context method(s) depends on the context e.g.\
+      \begin{itemize}
+          \item encrypt, decrypt
+          \item addLayoutComponent, minimumLayoutSize
+          \item transport
+      \end{itemize}
+      and acts depending on it by calling the \javainline{request} or \javainline{doAction} method of its current state reference.
+      \item \imp{Strategy/Algorithm Interface}: is
+        usually an interface as we implement some functionality and do not have an
+        ``is-a'' relationship.\\
+        The strategy interface specifies which methods the algorithms may be
+        able to perform.
+    \item \imp{Concrete Algorithm}: Implements the methods of the \textit{Strategy interface}
+  \end{itemizenosep}
+\end{partbox}
+\begin{notebox}[Note]\nospacing
+  \begin{itemizenosep}
+    \item Strategy methods may contain a \ul{reference} to the context as a parameter,
+  in order to use a state full algorithm see
+  \cref{subsubsec:statefullVsStateless}.
+    \item Strategy Interface may be defined inside the context class.
+  \end{itemizenosep}
+\end{notebox}
+\begin{codeboxNl}[Context]{java}
+  class Context{
+    private Strategy algorithm;
+    
+    public void setAlgorithm(Strategy a){
+      if(a == 0){ // See also Null Object Pattern |\cref{subsubsec:NullObjectPattern}|
+        throw new IllegalArgumentException();
+      } 
+      this.algorithm = a;
+    }
+
+    public State contextMethod1(){
+      algorithm.doAction1()
+    }
+
+    public State contextMethod1(){
+      algorithm.doAction1()
+      algorithm.doAction2(|\ul{\opta{this}}|,|\optc{args}|)
+      algorithm.doAction1()
+    }
+
+  }
+\end{codeboxNl}
+\begin{codeboxNl}[Strategy Interface]{java}
+  interface class Strategy {
+    privat void doAction1();
+    privat void doAction2(|\ul{\opta{Context cur}}|,|\optc{args}|);
+}
+\end{codeboxNl}
+\begin{codeboxNl}[Concrete Strategy]{java}
+  class Algorithm1 implements Strategy {
+    privat void doAction1(){|\ldots|};
+    privat void doAction2(|\ul{\opta{Context cur}}|,|\optc{args}|){|\ldots|};
+}
+\end{codeboxNl}
+\subsubsection{Statefull vs Stateless Strategys}
+\label{subsubsec:statefullVsStateless}
+\begin{sectionbox}\nospacing
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1.0\columnwidth]{figures/strategyStatefulVsStateless.png}
+  \label{fig:StatefullVsStateless}
+\end{figure}
+ \begin{itemizenosep}
+     \item \rdb{Stateless} Strategy: does not store/have any state/context
+   specific parameters $\Rightarrow$ strategy can be used from different
+   contexts.\\
+   \imp{Note}: in order to use parameters, strategy may \ul{access} state
+   specific parameters of \textit{context} (but not itself!).
+     \item \rdb{Statefull} Strategy: may store/have any state/context specific
+   parameters $\Rightarrow$ cannot be exchanged between different contexts.
+ \end{itemizenosep} 
+\end{sectionbox}
+\begin{sectionbox}[Strategy vs. State]\nospacing
+\begin{minipage}[t]{0.45\textwidth}
+  \imp{\tc{section}{Strategy}}
+  \begin{itemize}
+    \item Strategy is typically not aware of other concrete strategies
+    \item Typically set only once
+    \item Usually only one \textit{public} method
+    \item Strategy may contain algorithm specific state
+  \end{itemize}
+\end{minipage}
+\begin{minipage}[t]{0.45\textwidth}
+  \imp{\tc{section}{State}}
+  \begin{itemize}
+      \item A concrete state may be aware of others $\Rightarrow$ transitions.
+      \item Defines state-specific behavior
+      \item Typically state changes at runtime
+      \item State usually contains no state but accesses state in context
+  \end{itemize}
+\end{minipage}
+\end{sectionbox}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

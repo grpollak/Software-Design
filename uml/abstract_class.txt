@@ -1,0 +1,8 @@
+@startuml
+
+abstract class AbstractClass
+class DerivedClass
+
+
+AbstractClass <|-- DerivedClass : is-a
+@enduml

@@ -12,3 +12,68 @@
 
 % Math
 % ------------------------------------------------------------------------------
+
+\newtcolorbox{intentbox}[1][]{
+		attach title to upper,
+		fonttitle=\bfseries,
+		title =#1,
+		coltitle=black,
+		colback=intentbox,
+		colframe=intentboxFrame,
+		after skip = 1pt,				% skip before and after box
+		before skip = 2pt,
+		boxrule = 0.3mm,				% linewidth
+		arc = 0mm,						% innder radius of frames (corners)
+		boxsep = 0mm,					% Space between text and frame
+		% Sets the left,right,... space between all text parts and frame (additional to boxsep)
+		top=3pt,						
+		left=3pt,
+		right=3pt,
+		bottom=3pt,
+		%breakable
+}
+\newtcolorbox{partbox}[1][]{
+		attach title to upper,
+		fonttitle=\bfseries,
+		title =#1,
+		coltitle=black,
+		colback=partbox,
+		colframe=partboxFrame,
+		after skip = 1pt,				% skip before and after box
+		before skip = 2pt,
+		boxrule = 0.3mm,				% linewidth
+		arc = 0mm,						% innder radius of frames (corners)
+		boxsep = 0mm,					% Space between text and frame
+		% Sets the left,right,... space between all text parts and frame (additional to boxsep)
+		top=3pt,						
+		left=3pt,
+		right=3pt,
+		bottom=3pt,
+		%breakable
+}
+\newtcolorbox{consequencebox}[1][]{
+		attach title to upper,
+		fonttitle=\bfseries,
+		title =#1,
+		coltitle=black,
+		colback=consequencebox,
+		colframe=consequenceboxFrame,
+		after skip = 1pt,				% skip before and after box
+		before skip = 2pt,
+		boxrule = 0.3mm,				% linewidth
+		arc = 0mm,						% innder radius of frames (corners)
+		boxsep = 0mm,					% Space between text and frame
+		% Sets the left,right,... space between all text parts and frame (additional to boxsep)
+		top=3pt,						
+		left=3pt,
+		right=3pt,
+		bottom=3pt,
+		%breakable
+}
+% Emphbox
+\colorlet{intentbox}{gray!5}
+\definecolor{intentboxFrame}{RGB}{204, 187, 68}
+\colorlet{consequencebox}{gray!5}
+\definecolor{consequenceboxFrame}{RGB}{34, 136, 51}
+\colorlet{partbox}{gray!5}
+\definecolor{partboxFrame}{RGB}{238, 102, 119}

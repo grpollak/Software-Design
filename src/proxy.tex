@@ -1,0 +1,46 @@
+\begin{defnbox}\nospacing
+  \begin{defn}[Proxy]
+     Latin word meaning ``the authority to represent someone else''.
+  \end{defn}
+\end{defnbox}
+\begin{figure}[H]	
+  \centering
+    \resizebox{\linewidth}{!}{\tikzset{font=\Huge}\input{uml/proxy.tex}}
+\end{figure}
+\begin{intentbox}[Intents]
+  \begin{itemizenosep}
+      \item 
+      Use a surrogate or placeholder to control the access of original object
+      $\Rightarrow$ protection of the original object from the outside world.
+      \item Lazy initialization of resource hungry objects
+  \end{itemizenosep}
+\end{intentbox}
+\begin{partbox}[Participants]
+  \begin{itemizenosep}
+\item \textbf{Proxy interface}:
+An interface that is implemented by the concrete object and the proxy object
+\item \textbf{Dynamic proxy}
+\begin{itemize}
+    \item 
+Instance of a dynamic proxy class
+\item
+Dynamic proxy class implements a list of interfaces specified at runtime when
+dynamic proxy instance is generated (not at compile time)
+\end{itemize}
+\item \textbf{Invocation Handler Object}
+\begin{itemize}
+    \item 
+Each proxy instance has an associated invocation handler object which
+implements the interface InvocationHandler
+\item A method invocation on a proxy instance trough one of its proxy interfaces will
+be dispatched to the invoke() method of the instance’s invocation handler
+\end{itemize}
+\item \textbf{Concrete Object}:
+Object which is used in invocation handler
+  \end{itemizenosep}
+\end{partbox}
+\todo[inline]{finish section lec 9 proxy}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:

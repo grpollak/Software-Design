@@ -1,0 +1,30 @@
+\begin{intentbox}[Intent]
+  \imp{Motivation}: We do not want to litter the whole code with statements of
+  the form \javainline{if(strategy!=null)} in order to check if a strategy is set.
+  \begin{itemizenosep}
+  \item
+  Encapsulate the absence of an object/a strategy by providing a substitutable
+  alternative that offers suitable default ``\textit{do noting}'' behavior
+  \begin{itemizenosep}
+      \item empty methods \javainline{{}}
+      \item no strategy set error
+  \end{itemizenosep}
+  \end{itemizenosep}
+\end{intentbox}
+\begin{codeboxNl}{java}
+public class NullLayout implements LayoutManager {
+  public void addLayoutComponent(String name, Component comp) { }
+  public void removeLayoutComponent(Component comp) { }
+
+  public Dimension minimumLayoutSize(Container parent) {
+    return parent.getSize();
+  }
+  public Dimension preferredLayoutSize(Container parent) {
+    return parent.getSize();
+  }
+}
+\end{codeboxNl}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../formulary"
+%%% End:
